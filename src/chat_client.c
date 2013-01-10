@@ -54,7 +54,6 @@ flush_to(int fd, const char* buf, int len) {
   int written_out = 0;
   int bytes_written = 0;
 
-  puts("start flusing...");
   do {
     bytes_written = write(fd, buf + written_out, len - written_out);
     written_out += bytes_written;
@@ -64,14 +63,15 @@ flush_to(int fd, const char* buf, int len) {
 
 static int
 read_write_to_gui(int sfd, int guifd) {
-  char buf[BUFSIZE+1];
+  char buf[BUFSIZE];
   int bytes_read;
   if ((bytes_read = read(sfd, buf, BUFSIZE)) <= 0) {
     return -1;
   }
-  buf[bytes_read] = 0;
-  printf("got: %s\n", buf);
 
+#ifdef DEBUG
+  flush_to(STDOUT_FILENO, buf, bytes_read);
+#endif
   return flush_to(guifd, buf, bytes_read);
 }
 
@@ -83,6 +83,9 @@ write_to_server(int sfd, int guifd) {
     return -1;
 
   }
+#ifdef DEBUG
+  flush_to(STDOUT_FILENO, buf, bytes_read);
+#endif
   return flush_to(sfd, buf, bytes_read);
 }
 

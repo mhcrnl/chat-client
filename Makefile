@@ -1,6 +1,6 @@
 CC = gcc
 LD = gcc
-CC_OPTS = -O0 -Wall -g
+CC_OPTS = -O0 -Wall -g -DDEBUG
 LD_OPTS = $(CC_OPTS)
 
 all:
